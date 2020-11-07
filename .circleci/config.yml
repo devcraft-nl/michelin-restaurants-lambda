@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  deploy-function-aws:
+  deploy-function:
     executor: aws-cli/default
     steps:
       - checkout
@@ -39,6 +39,6 @@ workflows:
       - test:
           requires:
             - build
-      - create-bucket:
+      - deploy-function:
           requires:
             - test
