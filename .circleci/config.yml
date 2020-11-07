@@ -25,7 +25,7 @@ jobs:
       - checkout
       - run: mvn -Dmaven.test.skip=true package
       - store_artifacts:
-          path: /target/restaurants-scraper-1.0-SNAPSHOT.jar
+          path: target/restaurants-scraper-1.0-SNAPSHOT.jar
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
           # taken to be the root directory of the workspace.
