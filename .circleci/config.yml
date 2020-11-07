@@ -1,32 +1,40 @@
-version: 2.0
+version: 2.1
 
 jobs:
+  create-bucket:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/setup:
+          profile-name: lambda
+      - run: ./1-create-bucket.sh
+
   test:
     docker:
       - image: circleci/openjdk:11-node
-        auth:
-          username: dennisdevcraft
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: mvn test
+      - store_artifacts:
+          path: /target
 
   build:
     docker:
       - image: circleci/openjdk:11-node
-        auth:
-          username: dennisdevcraft
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: mvn -Dmaven.test.skip=true package
 
+orbs:
+  aws-cli: circleci/aws-cli@1.3.0
+
 workflows:
   version: 2
 
-  build-then-test:
+  build-test-deploy:
     jobs:
       - build
       - test:
           requires:
             - build
+      - create-bucket
