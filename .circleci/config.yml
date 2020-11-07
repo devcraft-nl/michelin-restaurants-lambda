@@ -8,7 +8,7 @@ jobs:
           username: dennisdevcraft
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
-      - checkout
+      - checkout master
       - run: mvn test
 
   build:
@@ -18,7 +18,7 @@ jobs:
           username: dennisdevcraft
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
-      - checkout
+      - checkout master
       - run: mvn -Dmaven.test.skip=true package
 
 workflows:
