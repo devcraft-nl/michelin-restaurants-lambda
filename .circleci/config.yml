@@ -17,15 +17,6 @@ jobs:
     steps:
       - checkout
       - run: mvn test
-      - store_artifacts:
-          path: /target/restaurants-scraper-1.0-SNAPSHOT.jar
-      - persist_to_workspace:
-            # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
-            # taken to be the root directory of the workspace.
-            root: target
-            # Must be relative path from root
-            paths:
-              - restaurants-scraper-1.0-SNAPSHOT.jar
 
   build:
     docker:
@@ -33,6 +24,15 @@ jobs:
     steps:
       - checkout
       - run: mvn -Dmaven.test.skip=true package
+      - store_artifacts:
+          path: /target/restaurants-scraper-1.0-SNAPSHOT.jar
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+          # taken to be the root directory of the workspace.
+          root: target
+          # Must be relative path from root
+          paths:
+            - restaurants-scraper-1.0-SNAPSHOT.jar
 
 orbs:
   aws-cli: circleci/aws-cli@1.3.0
