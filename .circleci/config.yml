@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  create-bucket:
+  deploy-function-aws:
     executor: aws-cli/default
     steps:
       - checkout
