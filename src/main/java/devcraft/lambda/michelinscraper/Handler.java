@@ -22,15 +22,9 @@ public class Handler implements RequestHandler<Map<String, String>, String> {
 
     @Override
     public String handleRequest(Map<String, String> event, Context context) {
-        String response = "200 OK";
-        try {
-            List<Restaurant> basicRestaurants = michelinConnector.getRestaurants(1);
-            queueService.send(basicRestaurants);
-        } catch (IOException e) {
-            logger.error("Error occured during lambda execution: ", e);
-            response = "500 Error";
-        }
-        return response;
+        List<Restaurant> basicRestaurants = michelinConnector.getRestaurants(1);
+        queueService.send(basicRestaurants);
+        return "Function execution finished";
     }
 
 }

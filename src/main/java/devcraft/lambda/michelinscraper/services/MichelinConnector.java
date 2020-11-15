@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,15 +32,19 @@ public class MichelinConnector {
         return instance;
     }
 
-    public List<Restaurant> getRestaurants(int page) throws IOException {
+    public List<Restaurant> getRestaurants(int page) {
         logger.info("Fetching restaurant search page");
-        Document doc = Jsoup.connect(MICHELIN_URL + RESTAURANTS_PATH + page).get();
-        List<BasicRestaurant> basicRestaurants = restaurantsParser.parseToBasicRestaurantList(doc);
-        return basicRestaurants.stream()
+        try {
+            Document doc = Jsoup.connect(MICHELIN_URL + RESTAURANTS_PATH + page).get();
+            List<BasicRestaurant> basicRestaurants = restaurantsParser.parseToBasicRestaurantList(doc);
+            return basicRestaurants.stream()
                     .map(RestaurantDetailConnection::new)
                     .filter(RestaurantDetailConnection::isDocumentFetched)
                     .map(conn -> restaurantsParser.enrichBasicRestaurant(conn.getBasicRestaurant(), conn.getDocument()))
                     .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static class RestaurantDetailConnection {
