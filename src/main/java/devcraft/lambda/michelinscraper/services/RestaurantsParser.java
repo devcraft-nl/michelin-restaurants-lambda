@@ -1,4 +1,4 @@
-package devcraft.lambda.michelinscraper;
+package devcraft.lambda.michelinscraper.services;
 
 import devcraft.lambda.michelinscraper.models.BasicRestaurant;
 import devcraft.lambda.michelinscraper.models.Restaurant;
@@ -14,8 +14,7 @@ public class RestaurantsParser {
 
     private static RestaurantsParser instance;
 
-    private RestaurantsParser() {
-    }
+    private RestaurantsParser() {}
 
     public static RestaurantsParser getInstance() {
         if (instance == null) {

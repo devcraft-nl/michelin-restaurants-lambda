@@ -1,9 +1,11 @@
-package devcraft.lambda.michelinscraper;
+package devcraft.lambda.michelinscraper.services;
 
 import devcraft.lambda.michelinscraper.models.BasicRestaurant;
 import devcraft.lambda.michelinscraper.models.Restaurant;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class MichelinConnector {
 
+    private static final Logger logger = LoggerFactory.getLogger(MichelinConnector.class);
     private static final String MICHELIN_URL = "https://guide.michelin.com";
     private static final String RESTAURANTS_PATH = "/en/restaurants/page/";
 
@@ -29,13 +32,13 @@ public class MichelinConnector {
     }
 
     public List<Restaurant> getRestaurants(int page) throws IOException {
+        logger.info("Fetching restaurant search page");
         Document doc = Jsoup.connect(MICHELIN_URL + RESTAURANTS_PATH + page).get();
         List<BasicRestaurant> basicRestaurants = restaurantsParser.parseToBasicRestaurantList(doc);
         return basicRestaurants.stream()
                     .map(RestaurantDetailConnection::new)
                     .filter(RestaurantDetailConnection::isDocumentFetched)
                     .map(conn -> restaurantsParser.enrichBasicRestaurant(conn.getBasicRestaurant(), conn.getDocument()))
-//                    .map(geoCoder::search)
                     .collect(Collectors.toList());
     }
 
@@ -49,7 +52,7 @@ public class MichelinConnector {
             try {
                 document = Jsoup.connect(MICHELIN_URL + basicRestaurant.getLink()).get();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Could not fetch restaurant detail page!", e);
             }
         }
 

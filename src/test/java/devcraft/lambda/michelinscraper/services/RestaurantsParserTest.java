@@ -1,4 +1,4 @@
-package devcraft.lambda.michelinscraper;
+package devcraft.lambda.michelinscraper.services;
 
 import devcraft.lambda.michelinscraper.models.BasicRestaurant;
 import devcraft.lambda.michelinscraper.models.Restaurant;

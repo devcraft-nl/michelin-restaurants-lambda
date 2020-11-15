@@ -1,7 +1,6 @@
 package devcraft.lambda.michelinscraper;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +12,6 @@ class InvokeTest {
 
     private static final Logger logger = LoggerFactory.getLogger(InvokeTest.class);
 
-    @Test
     void invokeTest() {
         logger.info("Invoke TEST");
         HashMap<String, String> event = new HashMap<String, String>();

@@ -1,6 +1,7 @@
-package devcraft.lambda.michelinscraper;
+package devcraft.lambda.michelinscraper.services;
 
 import devcraft.lambda.michelinscraper.models.Restaurant;
+import devcraft.lambda.michelinscraper.services.MichelinConnector;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

@@ -1,10 +1,9 @@
 package devcraft.lambda.michelinscraper;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class Properties {
 
     private static String googleMapsApiKey;
+    private static String queueName = "restaurantsQueue";
 
     static {
         googleMapsApiKey = System.getenv("GOOGLE_MAPS_API_KEY");
@@ -16,5 +15,9 @@ public class Properties {
 
     public static String googleMapsApiKey() {
         return googleMapsApiKey;
+    }
+
+    public static String getQueueName() {
+        return queueName;
     }
 }

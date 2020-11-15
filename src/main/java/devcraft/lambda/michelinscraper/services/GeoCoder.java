@@ -1,11 +1,10 @@
-package devcraft.lambda.michelinscraper;
+package devcraft.lambda.michelinscraper.services;
 
 import com.google.maps.*;
 import com.google.maps.errors.ApiException;
 import com.google.maps.errors.OverDailyLimitException;
-import com.google.maps.model.ComponentFilter;
 import com.google.maps.model.GeocodingResult;
-import com.google.maps.model.PlacesSearchResponse;
+import devcraft.lambda.michelinscraper.Properties;
 import devcraft.lambda.michelinscraper.models.Restaurant;
 import devcraft.lambda.michelinscraper.models.RestaurantLocation;
 import org.apache.commons.lang3.ArrayUtils;
