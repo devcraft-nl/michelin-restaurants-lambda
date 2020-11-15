@@ -1,6 +1,5 @@
 package devcraft.lambda.michelinscraper.services;
 
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.AmazonSQSException;
@@ -9,40 +8,43 @@ import com.amazonaws.services.sqs.model.SendMessageBatchRequestEntry;
 import com.google.gson.Gson;
 import devcraft.lambda.michelinscraper.Properties;
 import devcraft.lambda.michelinscraper.models.Restaurant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.collections4.ListUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 public class QueueService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MichelinConnector.class);
     private static final String QUEUE_NAME = Properties.getQueueName();
     private final Gson gson;
     private final AmazonSQS sqs;
 
-    public QueueService() {
+    public QueueService(AmazonSQS sqs) {
         gson = new Gson();
-        sqs = AmazonSQSClientBuilder
-                .defaultClient();
-//                .setEndpointConfiguration(EnvironmentVariableCredentialsProvider);
+        this.sqs = sqs;
         createQueue(sqs);
     }
 
     public void send(List<Restaurant> basicRestaurants) {
         String queueUrl = sqs.getQueueUrl(QUEUE_NAME).getQueueUrl();
 
-        SendMessageBatchRequest send_batch_request = new SendMessageBatchRequest()
-                .withQueueUrl(queueUrl)
-                .withEntries(createEntries(basicRestaurants));
-        sqs.sendMessageBatch(send_batch_request);
+        List<List<Restaurant>> batched = ListUtils.partition(basicRestaurants, 10);
+
+        batched.forEach(restaurantList -> {
+            SendMessageBatchRequest batchRequest = new SendMessageBatchRequest()
+                    .withQueueUrl(queueUrl)
+                    .withEntries(createEntries(basicRestaurants));
+            sqs.sendMessageBatch(batchRequest);
+        });
     }
 
     private List<SendMessageBatchRequestEntry> createEntries(List<Restaurant> basicRestaurants) {
         return basicRestaurants.stream()
                 .map(this::toSendBatchRequestEntry)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private SendMessageBatchRequestEntry toSendBatchRequestEntry(Restaurant restaurant) {

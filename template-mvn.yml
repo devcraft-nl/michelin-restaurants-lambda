@@ -17,4 +17,5 @@ Resources:
         - AWSLambdaReadOnlyAccess
         - AWSXrayWriteOnlyAccess
         - AWSLambdaVPCAccessExecutionRole
+        - AmazonSQSFullAccess
       Tracing: Active
