@@ -4,7 +4,7 @@ references:
   restore_target: &restore_target
     restore_cache:
       keys:
-        - target_cache-{{ checksum "target/restaurant-scraper-1.0-SNAPSHOT.jar" }}
+        - target_cache-{{ epoch }}
 jobs:
   deploy-function:
     executor: aws-cli/default
@@ -30,7 +30,7 @@ jobs:
       - store_artifacts:
           path: target/restaurant-scraper-1.0-SNAPSHOT.jar
       - save_cache:
-          key: target_cache-{{ checksum "target/restaurant-scraper-1.0-SNAPSHOT.jar" }}
+          key: target_cache-{{ epoch }}
           paths:
             - target/
 
