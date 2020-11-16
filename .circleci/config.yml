@@ -4,7 +4,13 @@ references:
   restore_target: &restore_target
     restore_cache:
       keys:
-        - target_cache-{{ epoch }}
+        - $CACHE_KEY
+  cache_target: &cache_target
+    save_cache:
+      key: $CACH_KEY
+      paths:
+        - target/
+
 jobs:
   deploy-function:
     executor: aws-cli/default
@@ -29,17 +35,13 @@ jobs:
       - run: mvn -Dmaven.test.skip=true package
       - store_artifacts:
           path: target/restaurant-scraper-1.0-SNAPSHOT.jar
-      - save_cache:
-          key: target_cache-{{ epoch }}
-          paths:
-            - target/
-
+      - command: |
+        echo "export CACHE_KEY=target_cache-{{ epoch }}" >> $BASH_ENV
+      - *cache_target
 orbs:
   aws-cli: circleci/aws-cli@1.3.0
-
 workflows:
   version: 2
-
   build-test-deploy:
     jobs:
       - build
