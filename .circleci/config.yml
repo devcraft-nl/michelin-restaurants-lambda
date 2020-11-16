@@ -4,10 +4,10 @@ references:
   restore_target: &restore_target
     restore_cache:
       keys:
-        - $CACHE_KEY
+        - target-cache-{{ .Environment.CIRCLE_SHA1 }}
   cache_target: &cache_target
     save_cache:
-      key: $CACH_KEY
+      key: target-cache-{{ .Environment.CIRCLE_SHA1 }}
       paths:
         - target/
 
@@ -35,7 +35,6 @@ jobs:
       - run: mvn -Dmaven.test.skip=true package
       - store_artifacts:
           path: target/restaurant-scraper-1.0-SNAPSHOT.jar
-      - run: echo "export CACHE_KEY=target_cache-$(date +%s)" >> $BASH_ENV
       - *cache_target
 orbs:
   aws-cli: circleci/aws-cli@1.3.0
