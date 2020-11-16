@@ -4,8 +4,7 @@ references:
   restore_target: &restore_target
     restore_cache:
       keys:
-        - target_cache
-
+        - target_cache-{{ checksum "target/restaurant-scraper-1.0-SNAPSHOT.jar" }}
 jobs:
   deploy-function:
     executor: aws-cli/default
@@ -16,14 +15,12 @@ jobs:
           profile-name: lambda
       - run: ./1-create-bucket.sh
       - run: ./2-deploy.sh
-
   test:
     docker:
       - image: circleci/openjdk:11-node
     steps:
       - checkout
       - run: mvn test
-
   build:
     docker:
       - image: circleci/openjdk:11-node
@@ -33,7 +30,7 @@ jobs:
       - store_artifacts:
           path: target/restaurant-scraper-1.0-SNAPSHOT.jar
       - save_cache:
-          key: target_cache
+          key: target_cache-{{ checksum "target/restaurant-scraper-1.0-SNAPSHOT.jar" }}
           paths:
             - target/
 
