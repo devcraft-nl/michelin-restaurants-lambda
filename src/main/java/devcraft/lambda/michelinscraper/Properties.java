@@ -9,9 +9,7 @@ public class Properties {
         googleMapsApiKey = System.getenv("GOOGLE_MAPS_API_KEY");
     }
 
-    public Properties(){
-
-    }
+    private Properties(){}
 
     public static String googleMapsApiKey() {
         return googleMapsApiKey;

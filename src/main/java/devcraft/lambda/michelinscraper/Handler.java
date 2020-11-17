@@ -15,7 +15,6 @@ import java.util.Map;
 // Handler value: devcraft.lambda.michelinscraper.Handler
 public class Handler implements RequestHandler<Map<String, String>, String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(Handler.class);
     private final MichelinConnector michelinConnector = MichelinConnector.getInstance();
     private final QueueService queueService = new QueueService(AmazonSQSClientBuilder
             .defaultClient());
