@@ -7,8 +7,11 @@ import com.amazonaws.services.sqs.model.SendMessageBatchRequestEntry;
 import com.google.gson.Gson;
 import devcraft.lambda.michelinscraper.Properties;
 import devcraft.lambda.michelinscraper.models.Restaurant;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.ListUtils;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -19,12 +22,18 @@ public class QueueService {
     private final Gson gson;
     private final AmazonSQS sqs;
     private final String queueUrl;
+    private final MessageDigest messageDigest;
 
     public QueueService(AmazonSQS sqs) {
         gson = new Gson();
         this.sqs = sqs;
         createQueue(sqs);
         queueUrl = sqs.getQueueUrl(QUEUE_NAME).getQueueUrl();
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void send(List<Restaurant> basicRestaurants) {
@@ -46,7 +55,11 @@ public class QueueService {
     }
 
     private SendMessageBatchRequestEntry toSendBatchRequestEntry(Restaurant restaurant) {
-        return new SendMessageBatchRequestEntry(restaurant.getName(), gson.toJson(restaurant));
+        return new SendMessageBatchRequestEntry(generateId(restaurant.getName()), gson.toJson(restaurant));
+    }
+
+    private String generateId(String name) {
+        return DigestUtils.md5Hex(name).toUpperCase();
     }
 
     private void createQueue(AmazonSQS sqs) {

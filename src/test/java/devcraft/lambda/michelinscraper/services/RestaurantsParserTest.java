@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,7 +71,7 @@ class RestaurantsParserTest {
     private String htmlToString(String file) throws URISyntaxException, IOException {
         URL url = RestaurantsParserTest.class.getResource(file);
         Path resPath = Paths.get(url.toURI());
-        return new String(Files.readAllBytes(resPath), StandardCharsets.UTF_8);
+        return Files.readString(resPath);
     }
 
 }
